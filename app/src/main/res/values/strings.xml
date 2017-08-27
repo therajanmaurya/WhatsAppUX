@@ -2,11 +2,23 @@
     <string name="app_name">Profile Samples</string>
 
     <string name="whats_app_profile_view">WhatsApp Profile View</string>
-    <string name="profile_photo">Profile Photo</string>
+    <string name="profile_photo">Profile photo</string>
     <string name="edit">Edit</string>
     <string name="share">Share</string>
     <string name="package_name" translatable="false">package</string>
     <string name="share_profile">Share profile</string>
+    <string name="camera">Camera</string>
+    <string name="remove_photo">Remove Photo</string>
+    <string name="remove">Remove</string>
+    <string name="gallery">Gallery</string>
+    <string name="edit_selected_file">Selected file:</string>
+    <string name="no_file_selected_yet">No file selected yet.</string>
+    <string name="choose_file">Choose a file (max size 512 KB)</string>
+    <string name="portrait_size_can_not_exceed">Portrait can\'t exceed size of 512KB.</string>
+    <string name="cancel">Cancel</string>
+    <string name="upload">Upload</string>
+    <string name="take_photo">Take photo (max size 512 KB)</string>
+    <string name="are_sure_want_remove_photo">Are you sure? you want to remove photo.</string>
 
     <!--Material Dialog-->
     <string name="dialog_permission_denied">Permission Denied</string>

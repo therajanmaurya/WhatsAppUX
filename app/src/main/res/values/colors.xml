@@ -8,4 +8,10 @@
 
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="gray_dark">#BB666666</color>
+    <color name="grey_500">#9e9e9e</color>
+    <color name="icon_image_background">#E9E2E2</color>
+    <color name="light_red">#fff9393c</color>
+    <color name="purple">#ffaa66cc</color>
+    <color name="red">#E94D2F</color>
 </resources>

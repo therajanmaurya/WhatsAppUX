@@ -101,6 +101,10 @@ public class WhatsAppProfileActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_profile_edit:
+                EditProfileBottomSheet profileBottomSheet =
+                        new EditProfileBottomSheet();
+                profileBottomSheet.show(getSupportFragmentManager(),
+                        getString(R.string.profile_photo));
                 return true;
             case R.id.menu_profile_share:
                 checkExternalStoragePermission();
