@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".whatsprofile.WhatsAppProfileActivity"
+            android:theme="@style/AppTheme.Black"/>
+
     </application>
 
 </manifest>

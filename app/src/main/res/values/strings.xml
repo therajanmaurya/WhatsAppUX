@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Profile Samples</string>
+
+    <string name="whats_app_profile_view">WhatsApp Profile View</string>
+    <string name="profile_photo">Profile Photo</string>
+    <string name="edit">Edit</string>
+    <string name="share">Share</string>
 </resources>
