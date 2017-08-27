@@ -5,4 +5,25 @@
     <string name="profile_photo">Profile Photo</string>
     <string name="edit">Edit</string>
     <string name="share">Share</string>
+    <string name="package_name" translatable="false">package</string>
+    <string name="share_profile">Share profile</string>
+
+    <!--Material Dialog-->
+    <string name="dialog_permission_denied">Permission Denied</string>
+    <string name="dialog_action_re_try">Retry</string>
+    <string name="dialog_action_i_am_sure">I\'M Sure</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_action_app_settings">App Settings</string>
+    <string name="permission_denied_write">Permission Denied to use external storage</string>
+    <string name="msg_setting_activity_not_found">Something went wrong finding Settings activity.
+        \nGo to \'Settings\' and grant permission manually.
+    </string>
+    <string name="dialog_message_write_permission_for_share_denied_prompt">Without write permission you will
+        not be able to share the image. Are you sure you want to deny this
+        permission?</string>
+    <string name="dialog_message_write_permission_for_share_never_ask_again">You have denied permission to
+        write in external storage, without this permission you will not be able to share image.
+        Please enable it in settings</string>
+
+
 </resources>

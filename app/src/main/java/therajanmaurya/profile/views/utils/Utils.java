@@ -1,4 +1,4 @@
-package therajanmaurya.profile.views;
+package therajanmaurya.profile.views.utils;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
