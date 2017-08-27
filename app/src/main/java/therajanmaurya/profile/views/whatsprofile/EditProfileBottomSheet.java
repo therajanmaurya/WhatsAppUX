@@ -113,6 +113,9 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 editAction = EditAction.GALLERY;
                 tvHeader.setText(R.string.gallery);
                 btnChooseSelectPhoto.setText(R.string.choose_file);
+                btnUploadPhoto.setText(R.string.upload);
+                btnChooseSelectPhoto.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_attach_file_black_24dp, 0, 0, 0);
                 btnChooseSelectPhoto.setVisibility(View.VISIBLE);
                 tvSelectFile.setVisibility(View.VISIBLE);
                 break;
@@ -122,6 +125,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 btnChooseSelectPhoto.setText(R.string.take_photo);
                 btnChooseSelectPhoto.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_camera_enhance_black_24dp, 0, 0, 0);
+                btnUploadPhoto.setText(R.string.upload);
                 btnChooseSelectPhoto.setVisibility(View.VISIBLE);
                 tvSelectFile.setVisibility(View.VISIBLE);
                 break;
