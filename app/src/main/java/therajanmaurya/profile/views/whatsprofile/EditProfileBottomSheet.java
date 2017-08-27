@@ -1,31 +1,48 @@
 package therajanmaurya.profile.views.whatsprofile;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import therajanmaurya.profile.views.R;
+import therajanmaurya.profile.views.utils.CheckSelfPermissionAndRequest;
+import therajanmaurya.profile.views.utils.ConstantKeys;
+import therajanmaurya.profile.views.utils.FileUtils;
+import therajanmaurya.profile.views.utils.ImageLoaderUtils;
 
 /**
  * @author Rajan Maurya
  *         On 06/08/17.
  */
 public class EditProfileBottomSheet extends BottomSheetDialogFragment
-        implements EditCustomerProfileContract.View, View.OnClickListener {
+        implements EditProfileContract.View, View.OnClickListener {
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_PHOTO_FROM_GALLERY = 2;
@@ -69,7 +86,6 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
     View rootView;
 
     private BottomSheetBehavior behavior;
-    private String customerIdentifier;
     private File file;
     private EditAction editAction;
 
@@ -97,6 +113,8 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 editAction = EditAction.GALLERY;
                 tvHeader.setText(R.string.gallery);
                 btnChooseSelectPhoto.setText(R.string.choose_file);
+                btnChooseSelectPhoto.setVisibility(View.VISIBLE);
+                tvSelectFile.setVisibility(View.VISIBLE);
                 break;
             case R.id.ll_camera:
                 editAction = EditAction.CAMERA;
@@ -104,6 +122,8 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 btnChooseSelectPhoto.setText(R.string.take_photo);
                 btnChooseSelectPhoto.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_camera_enhance_black_24dp, 0, 0, 0);
+                btnChooseSelectPhoto.setVisibility(View.VISIBLE);
+                tvSelectFile.setVisibility(View.VISIBLE);
                 break;
             case R.id.ll_remove_photo:
                 editAction = EditAction.REMOVE;
@@ -121,46 +141,171 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
         llCamera.setOnClickListener(this);
         llGallery.setOnClickListener(this);
         llRemovePhoto.setOnClickListener(this);
+
+        ImageLoaderUtils.loanDrawableIntoImageView(getActivity(),
+                ivCustomerPicture, R.drawable.cheese_4);
+    }
+
+    @OnClick(R.id.btn_cancel)
+    void onCancel() {
+        llEditActions.setVisibility(View.VISIBLE);
+        llEditActionForm.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.btn_choose_select_photo)
+    void chooseSelectDeletePhoto() {
+        switch (editAction) {
+            case CAMERA:
+                checkWriteExternalStorageAndCameraPermission();
+                break;
+            case GALLERY:
+                checkReadExternalStoragePermission();
+                break;
+        }
     }
 
     @Override
-    public void setCustomerIdentifier(String customerIdentifier) {
-
-    }
-
-    @Override
-    public void checkWriteExternalStoragePermission() {
-
+    public void checkWriteExternalStorageAndCameraPermission() {
+        if (CheckSelfPermissionAndRequest.checkMultiplePermissions(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+            openCamera();
+        } else {
+            requestWriteExternalStorageAndCameraPermission();
+        }
     }
 
     @Override
     public void checkReadExternalStoragePermission() {
-
+        if (CheckSelfPermissionAndRequest.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            viewGallery();
+        } else {
+            requestReadExternalStoragePermission();
+        }
     }
 
     @Override
     public void openCamera() {
-
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     @Override
     public void viewGallery() {
-
+        Intent intentDocument = new Intent(Intent.ACTION_GET_CONTENT);
+        intentDocument.setType("image/*");
+        startActivityForResult(intentDocument, REQUEST_PHOTO_FROM_GALLERY);
     }
 
     @Override
     public void showImageSizeExceededOrNot() {
-
+        int fileSize = Integer.parseInt(String.valueOf(file.length() / 1024));
+        if (fileSize > 512) {
+            btnUploadPhoto.setEnabled(false);
+            tvImageSize.setVisibility(View.VISIBLE);
+        } else {
+            btnUploadPhoto.setEnabled(true);
+            tvImageSize.setVisibility(View.GONE);
+        }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void requestWriteExternalStorageAndCameraPermission() {
+        CheckSelfPermissionAndRequest.requestPermissions(
+                (WhatsAppProfileActivity) getActivity(),
+                new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA},
+                ConstantKeys.PERMISSION_REQUEST_ALL,
+                new String[]{
+                        getString(R.string.dialog_message_write_permission_denied_prompt),
+                        getString(R.string.
+                                dialog_message_camera_permission_for_portrait_denied_prompt)}
+                ,
+                new String[]{
+                        getString(R.string.dialog_message_write_permission_never_ask_again),
+                        getString(R.string
+                                .dialog_message_camera_permission_for_portrait_never_ask_again)}
+                ,
+                new String[]{ConstantKeys.PERMISSIONS_WRITE_EXTERNAL_STORAGE_STATUS,
+                        ConstantKeys.PERMISSIONS_CAMERA_STATUS}
+        );
+    }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void requestReadExternalStoragePermission() {
+        CheckSelfPermissionAndRequest.requestPermission(
+                (WhatsAppProfileActivity) getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE,
+                ConstantKeys.PERMISSION_REQUEST_READ_EXTERNAL_STORAGE,
+                getResources().getString(
+                        R.string.dialog_message_read_permission_denied_prompt),
+                getResources().getString(R.string.dialog_message_read_permission_never_ask_again),
+                ConstantKeys.PERMISSIONS_READ_EXTERNAL_STORAGE_STATUS);
     }
 
     @Override
-    public void requestReadExternalStoragePermission() {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case ConstantKeys.PERMISSION_REQUEST_ALL:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openCamera();
+                } else {
+                    String permissionDeniedMessage = getString(R.string.permission_denied_write) +
+                            getString(R.string.permission_denied_camera);
+                    Snackbar snackbar = Snackbar.make(
+                            getActivity().findViewById(android.R.id.content),
+                            permissionDeniedMessage, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+                break;
 
+            case ConstantKeys.PERMISSION_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    viewGallery();
+                } else {
+                    Snackbar snackbar = Snackbar.make(
+                            getActivity().findViewById(android.R.id.content),
+                            getString(R.string.permission_denied_read), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                return;
+            }
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            file = FileUtils.createFile(getString(R.string.app_name), "profile.png");
+            FileUtils.saveBitmap(imageBitmap, file);
+            tvImageName.setText(file.getName());
+            ivCustomerPicture.setImageBitmap(imageBitmap);
+
+            showImageSizeExceededOrNot();
+
+        } else if (requestCode == REQUEST_PHOTO_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                return;
+            }
+            Uri uri = data.getData();
+            file = new File(FileUtils.getPathReal(getActivity(), uri));
+            tvImageName.setText(file.getName());
+            Glide.with(getActivity()).load(uri).asBitmap().into(ivCustomerPicture);
+
+            showImageSizeExceededOrNot();
+        }
     }
 
     @Override

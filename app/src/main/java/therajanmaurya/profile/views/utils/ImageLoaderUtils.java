@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.ByteArrayOutputStream;
 
 import therajanmaurya.profile.views.R;
@@ -50,5 +52,37 @@ public class ImageLoaderUtils {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(),
                 inImage, inContext.getString(R.string.profile_photo), null);
         return Uri.parse(path);
+    }
+
+    public static void loanUriIntoImageView(Context context, final ImageView imageView, Uri uri) {
+        Glide.with(context)
+                .load(uri)
+                .skipMemoryCache(true)
+                .placeholder(R.drawable.cheese_4)
+                .error(R.drawable.cheese_4)
+                .centerCrop()
+                .into(imageView);
+    }
+
+    public static void loadBitmapIntoImage(Context context, final ImageView imageView,
+            Bitmap bitmap) {
+        Glide.with(context)
+                .load(bitmap)
+                .asBitmap()
+                .placeholder(R.drawable.cheese_4)
+                .error(R.drawable.cheese_4)
+                .centerCrop()
+                .into(imageView);
+    }
+
+    public static void loanDrawableIntoImageView(Context context, final ImageView imageView,
+            int drawableId) {
+        Glide.with(context)
+                .load(drawableId)
+                .asBitmap()
+                .placeholder(R.drawable.cheese_4)
+                .error(R.drawable.cheese_4)
+                .centerCrop()
+                .into(imageView);
     }
 }

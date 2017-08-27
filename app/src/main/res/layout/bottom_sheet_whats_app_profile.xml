@@ -173,7 +173,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     app:civ_border_width="2dp"
-                    app:civ_border_color="@color/black"
+                    app:civ_border_color="@color/colorPrimary"
                     app:srcCompat="@drawable/cheese_4"/>
 
                 <TextView

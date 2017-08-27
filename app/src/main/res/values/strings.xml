@@ -37,5 +37,29 @@
         write in external storage, without this permission you will not be able to share image.
         Please enable it in settings</string>
 
+    <string name="permission_denied_camera">Permission Denied to use Camera</string>
+    <string name="permission_denied_read">Permission Denied to read external storage</string>
+
+    <string name="dialog_message_write_permission_denied_prompt">Without write permission you will
+        not be able to take photo from camera. Are you sure you want to deny this
+        permission?</string>
+    <string name="dialog_message_camera_permission_for_portrait_denied_prompt">Without camera permission you will
+        not be able to click photo. Are you sure you want to deny this
+        permission?</string>
+
+    <string name="dialog_message_write_permission_never_ask_again">You have denied permission to
+        write in external storage, without this permission you will not be able to take phtot.
+        Please enable it in settings</string>
+
+    <string name="dialog_message_read_permission_denied_prompt">Without read permission you will
+        not be able to view the image from gallery. Are you sure you want to deny this
+        permission?</string>
+    <string name="dialog_message_read_permission_never_ask_again">You have denied permission to
+        read in external storage, without this permission you will not be able to view image from gallery.
+        Please enable it in settings</string>
+
+    <string name="dialog_message_camera_permission_for_portrait_never_ask_again">You have denied permission to
+        use camera, without this permission you will not be able to click photo.
+        Please enable it in settings</string>
 
 </resources>

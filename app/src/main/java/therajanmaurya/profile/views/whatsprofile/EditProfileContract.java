@@ -6,15 +6,13 @@ import java.io.File;
  * @author Rajan Maurya
  *         On 06/08/17.
  */
-public interface EditCustomerProfileContract {
+public interface EditProfileContract {
 
     interface View {
 
         void showUserInterface();
 
-        void setCustomerIdentifier(String customerIdentifier);
-
-        void checkWriteExternalStoragePermission();
+        void checkWriteExternalStorageAndCameraPermission();
 
         void checkReadExternalStoragePermission();
 

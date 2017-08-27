@@ -24,7 +24,7 @@ import therajanmaurya.profile.views.utils.Utils;
  * @author Rajan Maurya
  *         On 27/08/17.
  */
-public class WhatsAppProfileActivity extends AppCompatActivity {
+public class WhatsAppProfileActivity extends AppCompatActivity implements RefreshProfilePhoto {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -119,5 +119,10 @@ public class WhatsAppProfileActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_whats_app, menu);
         Utils.setToolbarIconColor(this, menu, R.color.white);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void refreshProfilePhoto() {
+
     }
 }
