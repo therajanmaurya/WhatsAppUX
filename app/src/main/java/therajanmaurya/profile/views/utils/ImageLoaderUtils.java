@@ -57,7 +57,7 @@ public class ImageLoaderUtils {
     public static void loanUriIntoImageView(Context context, final ImageView imageView, Uri uri) {
         Glide.with(context)
                 .load(uri)
-                .skipMemoryCache(true)
+                .asBitmap()
                 .placeholder(R.drawable.cheese_4)
                 .error(R.drawable.cheese_4)
                 .centerCrop()
@@ -65,9 +65,9 @@ public class ImageLoaderUtils {
     }
 
     public static void loadBitmapIntoImage(Context context, final ImageView imageView,
-            Bitmap bitmap) {
+            byte[] bytes) {
         Glide.with(context)
-                .load(bitmap)
+                .load(bytes)
                 .asBitmap()
                 .placeholder(R.drawable.cheese_4)
                 .error(R.drawable.cheese_4)

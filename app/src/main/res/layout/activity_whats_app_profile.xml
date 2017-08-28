@@ -23,7 +23,18 @@
             android:layout_marginBottom="@dimen/layout_padding_64dp"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
+            android:visibility="visible"
             android:contentDescription="@string/app_name"/>
+
+        <TextView
+            android:id="@+id/tv_removed_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:text="@string/you_removed_photo"
+            />
 
     </LinearLayout>
 

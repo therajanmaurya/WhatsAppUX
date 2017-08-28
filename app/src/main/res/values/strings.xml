@@ -19,6 +19,10 @@
     <string name="upload">Upload</string>
     <string name="take_photo">Take photo (max size 512 KB)</string>
     <string name="are_sure_want_remove_photo">Are you sure? you want to remove photo.</string>
+    <string name="gallery_photo_not_changed">Sorry you have not selected any photo from gallery</string>
+    <string name="camera_photo_not_changed">Sorry you have not taken any photo from Camera</string>
+    <string name="you_removed_photo">You have removed photo, Please select photo again from camera or gallery</string>
+    <string name="photo_removed">Photo removed</string>
 
     <!--Material Dialog-->
     <string name="dialog_permission_denied">Permission Denied</string>

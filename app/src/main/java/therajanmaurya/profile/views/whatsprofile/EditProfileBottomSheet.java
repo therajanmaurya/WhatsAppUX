@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -47,8 +48,8 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_PHOTO_FROM_GALLERY = 2;
 
-    @BindView(R.id.iv_customer_picture)
-    CircleImageView ivCustomerPicture;
+    @BindView(R.id.iv_profile_picture)
+    CircleImageView ivProfilePicture;
 
     @BindView(R.id.tv_header)
     TextView tvHeader;
@@ -88,6 +89,9 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
     private BottomSheetBehavior behavior;
     private File file;
     private EditAction editAction;
+    private RefreshProfilePhoto refreshProfilePhoto;
+    private Bitmap imageBitmap;
+    private byte[] imageByte;
 
     @NonNull
     @Override
@@ -117,6 +121,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 btnChooseSelectPhoto.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_attach_file_black_24dp, 0, 0, 0);
                 btnChooseSelectPhoto.setVisibility(View.VISIBLE);
+                tvImageName.setText(R.string.no_file_selected_yet);
                 tvSelectFile.setVisibility(View.VISIBLE);
                 break;
             case R.id.ll_camera:
@@ -127,6 +132,7 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                         R.drawable.ic_camera_enhance_black_24dp, 0, 0, 0);
                 btnUploadPhoto.setText(R.string.upload);
                 btnChooseSelectPhoto.setVisibility(View.VISIBLE);
+                tvImageName.setText(R.string.no_file_selected_yet);
                 tvSelectFile.setVisibility(View.VISIBLE);
                 break;
             case R.id.ll_remove_photo:
@@ -147,13 +153,40 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
         llRemovePhoto.setOnClickListener(this);
 
         ImageLoaderUtils.loanDrawableIntoImageView(getActivity(),
-                ivCustomerPicture, R.drawable.cheese_4);
+                ivProfilePicture, R.drawable.cheese_4);
     }
 
     @OnClick(R.id.btn_cancel)
     void onCancel() {
         llEditActions.setVisibility(View.VISIBLE);
         llEditActionForm.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.btn_upload_photo)
+    void uploadPhoto() {
+        switch (editAction) {
+            case GALLERY:
+                if (file != null) {
+                    refreshProfilePhoto.showCameraPhoto(file);
+                } else {
+                    Toast.makeText(getActivity(), R.string.gallery_photo_not_changed,
+                            Toast.LENGTH_LONG).show();
+                }
+                break;
+            case CAMERA:
+                if (imageBitmap != null) {
+                    refreshProfilePhoto.showGalleryPhoto(imageBitmap);
+                } else {
+                    Toast.makeText(getActivity(), R.string.camera_photo_not_changed,
+                            Toast.LENGTH_LONG).show();
+                }
+                break;
+            case REMOVE:
+                refreshProfilePhoto.deletePhoto();
+                Toast.makeText(getActivity(), R.string.photo_removed, Toast.LENGTH_LONG).show();
+                break;
+        }
+        dismiss();
     }
 
     @OnClick(R.id.btn_choose_select_photo)
@@ -166,6 +199,10 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 checkReadExternalStoragePermission();
                 break;
         }
+    }
+
+    public void setRefreshProfilePhoto(RefreshProfilePhoto refreshProfilePhoto) {
+        this.refreshProfilePhoto = refreshProfilePhoto;
     }
 
     @Override
@@ -290,12 +327,12 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
                 return;
             }
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageBitmap = (Bitmap) extras.get("data");
 
             file = FileUtils.createFile(getString(R.string.app_name), "profile.png");
             FileUtils.saveBitmap(imageBitmap, file);
             tvImageName.setText(file.getName());
-            ivCustomerPicture.setImageBitmap(imageBitmap);
+            ivProfilePicture.setImageBitmap(imageBitmap);
 
             showImageSizeExceededOrNot();
 
@@ -306,35 +343,10 @@ public class EditProfileBottomSheet extends BottomSheetDialogFragment
             Uri uri = data.getData();
             file = new File(FileUtils.getPathReal(getActivity(), uri));
             tvImageName.setText(file.getName());
-            Glide.with(getActivity()).load(uri).asBitmap().into(ivCustomerPicture);
+            Glide.with(getActivity()).load(uri).asBitmap().into(ivProfilePicture);
 
             showImageSizeExceededOrNot();
         }
-    }
-
-    @Override
-    public void showPortraitUploadedSuccessfully() {
-
-    }
-
-    @Override
-    public void showPortraitDeletedSuccessfully() {
-
-    }
-
-    @Override
-    public void showProgressDialog(String message) {
-
-    }
-
-    @Override
-    public void hideProgressDialog() {
-
-    }
-
-    @Override
-    public void showMessage(String message) {
-
     }
 
     @Override

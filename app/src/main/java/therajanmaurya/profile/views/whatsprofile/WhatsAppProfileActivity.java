@@ -2,6 +2,8 @@ package therajanmaurya.profile.views.whatsprofile;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +38,12 @@ public class WhatsAppProfileActivity extends AppCompatActivity implements Refres
 
     @BindView(R.id.iv_what_picture)
     ImageView ivWhatsAppPicture;
+
+    @BindView(R.id.tv_removed_photo)
+    TextView tvRemovedPhoto;
+
+    private Bitmap bitmap;
+    private byte[] imageBytes;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +116,7 @@ public class WhatsAppProfileActivity extends AppCompatActivity implements Refres
             case R.id.menu_profile_edit:
                 EditProfileBottomSheet profileBottomSheet =
                         new EditProfileBottomSheet();
+                profileBottomSheet.setRefreshProfilePhoto(this);
                 profileBottomSheet.show(getSupportFragmentManager(),
                         getString(R.string.profile_photo));
                 return true;
@@ -121,8 +135,34 @@ public class WhatsAppProfileActivity extends AppCompatActivity implements Refres
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public void refreshProfilePhoto() {
+    public void showProfilePhoto(boolean status) {
+        if (status) {
+            ivWhatsAppPicture.setVisibility(View.VISIBLE);
+            tvRemovedPhoto.setVisibility(View.GONE);
+        } else {
+            ivWhatsAppPicture.setVisibility(View.GONE);
+            tvRemovedPhoto.setVisibility(View.VISIBLE);
+        }
+    }
 
+    @Override
+    public void showCameraPhoto(File file) {
+        Uri uri = Uri.fromFile(file);
+        ImageLoaderUtils.loanUriIntoImageView(this, ivWhatsAppPicture, uri);
+        showProfilePhoto(true);
+    }
+
+    @Override
+    public void showGalleryPhoto(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        ImageLoaderUtils.loadBitmapIntoImage(this, ivWhatsAppPicture, stream.toByteArray());
+        showProfilePhoto(true);
+    }
+
+    @Override
+    public void deletePhoto() {
+        showProfilePhoto(false);
+        bitmap = null;
     }
 }
